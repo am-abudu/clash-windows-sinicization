@@ -4,9 +4,19 @@
   "description": "windows版clash汉化工具",
   "main": "index.js",
   "license": "MIT",
+  "scripts": {
+    "build": "pkg -t win index.js",
+    "dev": "node index.js"
+  },
   "dependencies": {
     "asar": "^3.0.3",
     "chalk": "^4.1.0",
     "ora": "^5.1.0"
+  },
+  "bin": "index.js",
+  "pkg": {
+    "scripts": [
+      "./asar.js"
+    ]
   }
 }
