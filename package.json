@@ -1,0 +1,12 @@
+{
+  "name": "clash-windows-sinicization",
+  "version": "1.0.0",
+  "description": "windows版clash汉化工具",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "asar": "^3.0.3",
+    "chalk": "^4.1.0",
+    "ora": "^5.1.0"
+  }
+}
