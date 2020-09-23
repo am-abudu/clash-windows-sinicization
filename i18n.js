@@ -493,6 +493,12 @@ const render = [
     reg: /"Error!"/g,
     value: '"错误！"',
     type: "render"
+  },
+  // 修复导入按钮汉字换行的问题
+  {
+    reg: /"confirm confirm-right",/g,
+    value: '"confirm confirm-right",style:{"white-space":"nowrap"},',
+    type: "render"
   }
 ];
 
@@ -519,7 +525,7 @@ const main = [
   },
   {
     reg: /"Dashboard"/g,
-    value: '"打开软件"',
+    value: '"打开面板"',
     type: "main"
   },
   {
