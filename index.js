@@ -17,6 +17,8 @@ const backPath = path.resolve("./resources", "clash-windows-sinicization");
 const tmpPath = path.join(backPath, "tmp");
 // 解压后的electron路径
 const extractPath = path.join(tmpPath, "dist", "electron");
+// 备份文件
+const backupFile = path.join(backPath, "backup");
 
 const log = {
   blackBright(...params) {
@@ -42,14 +44,20 @@ const qaList = [
     q: "输入1或2（回车默认执行汉化）：\n1 进行汉化\n2 恢复原版",
     async a(answer) {
       if (Number(answer) === 1 || answer === "") {
-        log.blackBright("开始汉化");
-
+        log.blackBright("正在解压...");
         const extract = await runWithWorker("extract");
-
         if (extract === true) {
-          fs.copyFileSync(asarPath, path.join(backPath, "backup"));
           log.green("解压完成");
-          log.blackBright("正在汉化");
+          try {
+            // 如果备份文件存在则不去备份
+            fs.accessSync(backupFile);
+            log.yellow("备份文件已存在。");
+          } catch (e) {
+            log.blackBright("正在备份原文件...");
+            fs.copyFileSync(asarPath, path.join(backPath, "backup"));
+            log.green("原文件备份成功！");
+          }
+          log.blackBright("正在汉化...");
           let rendererJS = fs.readFileSync(
             path.join(extractPath, "renderer.js"),
             "utf8"
@@ -83,6 +91,8 @@ const qaList = [
           log.yellow("正在清除缓存目录...");
           rimraf.sync(tmpPath);
           log.green("汉化成功！");
+          log.yellow("5秒后自动关闭！");
+          setTimeout(closeRl, 5000);
           return true;
         } else {
           log.red(`\n汉化失败，错误：\n${pack}`);
@@ -90,7 +100,6 @@ const qaList = [
         }
       } else if (Number(answer) === 2) {
         try {
-          const backupFile = path.join(backPath, "backup");
           fs.accessSync(backupFile);
           log.blackBright("开始恢复原版");
           fs.copyFileSync(backupFile, asarPath);
