@@ -5,7 +5,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "build": "pkg -t win index.js",
+    "build": "pkg -t win -o=build/clash-windows-sinicization index.js",
     "dev": "node index.js"
   },
   "dependencies": {
