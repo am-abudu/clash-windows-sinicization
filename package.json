@@ -1,11 +1,12 @@
 {
   "name": "clash-windows-sinicization",
   "version": "1.0.0",
+  "author": "liu",
   "description": "windows版clash汉化工具",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "build": "pkg -t win -o=build/clash-windows-sinicization index.js",
+    "build": "pkg -t win -o build/%npm_package_name%-%npm_package_version% index.js",
     "dev": "node index.js"
   },
   "dependencies": {
