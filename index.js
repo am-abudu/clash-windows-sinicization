@@ -5,6 +5,8 @@ const path = require("path");
 const ora = require("ora");
 const { Worker } = require("worker_threads");
 const i18n = require("./i18n");
+const rimraf = require("rimraf");
+
 // pkg会识别这行，导入asar.js文件
 require("./asar");
 // asar路径
@@ -17,8 +19,8 @@ const tmpPath = path.join(backPath, "tmp");
 const extractPath = path.join(tmpPath, "dist", "electron");
 
 const log = {
-  blue(...params) {
-    console.log(chalk.blue(...params));
+  blackBright(...params) {
+    console.log(chalk.blackBright(...params));
   },
   red(...params) {
     console.log("\n", chalk.red(...params), "\n");
@@ -26,8 +28,11 @@ const log = {
   green(...params) {
     console.log(chalk.green(...params));
   },
-  magenta(...params) {
-    console.log(chalk.magenta(...params));
+  whiteBright(...params) {
+    console.log(chalk.whiteBright(...params));
+  },
+  yellow(...params) {
+    console.log(chalk.yellow(...params));
   }
 };
 
@@ -37,14 +42,14 @@ const qaList = [
     q: "输入1或2（回车默认执行汉化）：\n1 进行汉化\n2 恢复原版",
     async a(answer) {
       if (Number(answer) === 1 || answer === "") {
-        log.blue("开始汉化");
+        log.blackBright("开始汉化");
 
         const extract = await runWithWorker("extract");
 
         if (extract === true) {
           fs.copyFileSync(asarPath, path.join(backPath, "backup"));
           log.green("解压完成");
-          log.blue("正在汉化");
+          log.blackBright("正在汉化");
           let rendererJS = fs.readFileSync(
             path.join(extractPath, "renderer.js"),
             "utf8"
@@ -75,6 +80,8 @@ const qaList = [
 
         const pack = await runWithWorker("pack");
         if (pack) {
+          log.yellow("正在清除缓存目录...");
+          rimraf.sync(tmpPath);
           log.green("汉化成功！");
           return true;
         } else {
@@ -85,7 +92,7 @@ const qaList = [
         try {
           const backupFile = path.join(backPath, "backup");
           fs.accessSync(backupFile);
-          log.blue("开始恢复原版");
+          log.blackBright("开始恢复原版");
           fs.copyFileSync(backupFile, asarPath);
           return true;
         } catch (e) {
@@ -98,7 +105,7 @@ const qaList = [
   {
     q: "finish",
     a() {
-      rl.close();
+      closeRl();
     }
   }
 ];
@@ -135,7 +142,7 @@ async function qaFn(question, answerFn) {
     if (question === "finish") {
       log.green("回车即可关闭窗口");
     } else {
-      log.magenta(question);
+      log.whiteBright(question);
     }
     rl.question("", async answer => {
       console.log("");
@@ -157,4 +164,8 @@ function runWithWorker(type) {
       resolve(message);
     });
   });
+}
+
+function closeRl() {
+  rl.close();
 }

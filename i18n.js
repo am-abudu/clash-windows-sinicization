@@ -519,7 +519,7 @@ const main = [
   },
   {
     reg: /"Dashboard"/g,
-    value: '"面板"',
+    value: '"打开软件"',
     type: "main"
   },
   {
